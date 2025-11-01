@@ -11,6 +11,7 @@ const COPY = {
   inputPlaceholder: "Type a command or a question (e.g., cd resume)",
   commands: {
     cdResume: "Opening resume...",
+    cdBlogs: "Opening blogs...",
   },
   suggestions: [
     "Who are you?",
@@ -178,6 +179,19 @@ export function Terminal() {
       setTimeout(() => {
         navigate("/resume");
       }, 2000);
+      return;
+    }
+
+    if (userInput.toLowerCase() === "cd blogs") {
+      const response: Response = {
+        question: userInput,
+        answer: COPY.commands.cdBlogs,
+        isLoading: true,
+      };
+      setResponses((prev) => [...prev, response]);
+      setUserInput("");
+      setIsRedirecting(true);
+      setTimeout(() => navigate("/blogs"), 2000);
       return;
     }
 

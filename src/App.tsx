@@ -9,10 +9,11 @@ import { Terminal } from "./components/Terminal";
 import { Resume } from "./components/Resume";
 import { ImageWithFallback } from "./components/figma/ImageWithFallback";
 import { useEffect } from "react";
+import { Blogs } from "./components/blogs/Blogs";
+import { BlogDetail } from "./components/blogs/BlogDetail";
 
 function TerminalPage() {
   const navigate = useNavigate();
-
   useEffect(() => {
     navigate("/", { replace: true });
   }, [navigate]);
@@ -34,11 +35,21 @@ function ResumePage() {
   return <Resume />;
 }
 
+function BlogsPage() {
+  return <Blogs />;
+}
+
+function BlogDetailPage() {
+  return <BlogDetail />;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/resume" element={<ResumePage />} />
+        <Route path="/blogs" element={<BlogsPage />} />
+        <Route path="/blogs/:slug" element={<BlogDetailPage />} />
         <Route path="/" element={<TerminalPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
