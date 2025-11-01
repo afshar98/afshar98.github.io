@@ -12,7 +12,6 @@
         'lucide-react@0.487.0': 'lucide-react',
         'cmdk@1.1.1': 'cmdk',
         'class-variance-authority@0.7.1': 'class-variance-authority',
-        '@radix-ui/react-switch@1.1.3': '@radix-ui/react-switch',
         '@radix-ui/react-slot@1.1.2': '@radix-ui/react-slot',
         '@radix-ui/react-separator@1.1.2': '@radix-ui/react-separator',
         '@radix-ui/react-select@2.1.6': '@radix-ui/react-select',

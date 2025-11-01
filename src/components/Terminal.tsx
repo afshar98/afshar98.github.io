@@ -3,9 +3,53 @@ import { motion, AnimatePresence } from "motion/react";
 import { PickerWheel } from "./PickerWheel";
 import { Button } from "./ui/button";
 import { Mail, Linkedin, Github, FileText } from "lucide-react";
-import { Language, translations } from "../translations";
 import { useNavigate } from "react-router-dom";
 import { LoadingDots } from "./LoadingDots";
+
+const COPY = {
+  greeting: "Hi, I'm Mohammad — Front-End Developer.",
+  inputPlaceholder: "Type a command or a question (e.g., cd resume)",
+  commands: {
+    cdResume: "Opening resume...",
+  },
+  suggestions: [
+    "Who are you?",
+    "What do you do?",
+    "Show me your background",
+    "How can I contact you?",
+    "What tech do you use?",
+    "Where is your portfolio?",
+  ],
+  responses: {
+    "Who are you?": {
+      answer:
+        "I'm Mohammad Afshar, a front-end developer focused on React/Next.js, performance, and delightful UX.",
+    },
+    "What do you do?": {
+      answer:
+        "I build scalable, component-driven web apps with clean architectures, strong DX, and rock-solid UI systems.",
+    },
+    "Show me your background": {
+      answer:
+        "I’ve worked across complex dashboards, real-time UIs, and design systems. You can browse my resume as well.",
+      actions: [{ label: "Open Resume" }],
+    },
+    "How can I contact you?": {
+      answer: "Pick a channel below:",
+      actions: [{ label: "Email" }, { label: "LinkedIn" }],
+    },
+    "What tech do you use?": {
+      answer:
+        "React, Next.js, Vite, Zustand, React Query, Tailwind, shadcn/ui, Radix, SWC, Vitest/Jest, Storybook, WebSocket.",
+    },
+    "Where is your portfolio?": {
+      answer: "Explore my work on GitHub or visit my website:",
+      actions: [{ label: "GitHub" }, { label: "Website" }],
+    },
+  } as Record<string, { answer: string; actions?: { label: string }[] }>,
+  defaultResponse:
+    "Command not recognized. Try one of the suggested questions (scroll) or type `cd resume`.",
+};
 
 interface ResponseAction {
   label: string;
@@ -20,17 +64,10 @@ interface Response {
   isLoading?: boolean;
 }
 
-interface TerminalProps {
-  language: Language;
-}
-
-export function Terminal({ language }: TerminalProps) {
-  const t = translations[language];
-  const isRTL = language === "fa";
+export function Terminal() {
   const navigate = useNavigate();
   const [displayedText, setDisplayedText] = useState("");
-  const [isTypingComplete, setIsTypingComplete] =
-    useState(false);
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
   const [userInput, setUserInput] = useState("");
   const [showPicker, setShowPicker] = useState(false);
@@ -43,35 +80,30 @@ export function Terminal({ language }: TerminalProps) {
 
   // Auto-typing effect
   useEffect(() => {
-    // Reset when language changes
     setDisplayedText("");
     setIsTypingComplete(false);
     setResponses([]);
     setUserInput("");
-  }, [language]);
+  }, []);
 
   useEffect(() => {
-    if (displayedText.length < t.greeting.length) {
+    if (displayedText.length < COPY.greeting.length) {
       const timeout = setTimeout(() => {
-        setDisplayedText(
-          t.greeting.slice(0, displayedText.length + 1),
-        );
+        setDisplayedText(COPY.greeting.slice(0, displayedText.length + 1));
       }, 100);
       return () => clearTimeout(timeout);
     } else {
       setIsTypingComplete(true);
     }
-  }, [displayedText, t.greeting]);
+  }, [displayedText]);
 
   // Blinking cursor
   useEffect(() => {
-    const interval = setInterval(() => {
-      setShowCursor((prev) => !prev);
-    }, 530);
+    const interval = setInterval(() => setShowCursor((prev) => !prev), 530);
     return () => clearInterval(interval);
   }, []);
 
-  // Scroll detection
+  // Scroll detection -> open picker once
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       if (!hasScrolledRef.current && isTypingComplete) {
@@ -80,19 +112,13 @@ export function Terminal({ language }: TerminalProps) {
         setShowPicker(true);
       }
     };
-
-    window.addEventListener("wheel", handleWheel, {
-      passive: false,
-    });
-    return () =>
-      window.removeEventListener("wheel", handleWheel);
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => window.removeEventListener("wheel", handleWheel);
   }, [isTypingComplete]);
 
   // Focus input when typing is complete
   useEffect(() => {
-    if (isTypingComplete && inputRef.current) {
-      inputRef.current.focus();
-    }
+    if (isTypingComplete && inputRef.current) inputRef.current.focus();
   }, [isTypingComplete]);
 
   // Update cursor position based on text width
@@ -103,53 +129,27 @@ export function Terminal({ language }: TerminalProps) {
     }
   }, [userInput]);
 
-  // Global keyboard listener - focus input on any keypress (terminal behavior)
+  // Global key listener to focus input
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      // Skip if picker is shown or typing animation is not complete
-      if (showPicker || !isTypingComplete || !inputRef.current)
-        return;
+      if (showPicker || !isTypingComplete || !inputRef.current) return;
 
-      // Skip if user is interacting with other inputs or textareas
       const target = e.target as HTMLElement;
-      if (
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA"
-      )
-        return;
-
-      // Don't prevent default for special keys
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
 
-      // Focus input for printable characters
-      if (
-        e.key.length === 1 ||
-        e.key === "Backspace" ||
-        e.key === "Delete"
-      ) {
+      if (e.key.length === 1 || e.key === "Backspace" || e.key === "Delete") {
         inputRef.current.focus();
       }
     };
-
     window.addEventListener("keydown", handleGlobalKeyDown);
-    return () =>
-      window.removeEventListener(
-        "keydown",
-        handleGlobalKeyDown,
-      );
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
   }, [isTypingComplete, showPicker]);
 
   // Keep input focused after submitting
   useEffect(() => {
-    if (
-      isTypingComplete &&
-      inputRef.current &&
-      responses.length > 0
-    ) {
-      // Small delay to ensure DOM has updated
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
+    if (isTypingComplete && inputRef.current && responses.length > 0) {
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [responses, isTypingComplete]);
 
@@ -157,109 +157,81 @@ export function Terminal({ language }: TerminalProps) {
     setUserInput(suggestion);
     setShowPicker(false);
     hasScrolledRef.current = false;
-    // Focus input after selecting suggestion
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    }, 100);
+    setTimeout(() => inputRef.current?.focus(), 100);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!userInput.trim()) return;
 
-    // Check for "cd resume" command
+    // Special command: cd resume
     if (userInput.toLowerCase() === "cd resume") {
       const response: Response = {
         question: userInput,
-        answer: t.commands.cdResume,
+        answer: COPY.commands.cdResume,
         isLoading: true,
       };
-      setResponses([...responses, response]);
+      setResponses((prev) => [...prev, response]);
       setUserInput("");
       setIsRedirecting(true);
-      
-      // Navigate to resume after 2 seconds
+
       setTimeout(() => {
-        navigate(`/${language}/resume`);
+        navigate("/resume");
       }, 2000);
       return;
     }
 
-    // Get the response from translations
-    const translationData = t.responses[userInput];
+    // Exact match on known questions
+    const data = COPY.responses[userInput];
 
     let response: Response;
-    if (translationData) {
+    if (data) {
       response = {
         question: userInput,
-        answer: translationData.answer,
-        actions: translationData.actions?.map(
-          (action, index) => {
-            const actionConfig: ResponseAction = {
-              label: action.label,
-              onClick: () => {},
-            };
+        answer: data.answer,
+        actions: data.actions?.map((action, index) => {
+          const cfg: ResponseAction = {
+            label: action.label,
+            onClick: () => {},
+          };
 
-            // Map actions based on their index
-            if (userInput === t.suggestions[2]) {
-              // Background question - add resume link
-              actionConfig.icon = (
-                <FileText className="w-4 h-4" />
-              );
-              actionConfig.onClick = () =>
-                navigate(`/${language}/resume`);
-            } else if (userInput === t.suggestions[3]) {
-              // Contact question
-              if (index === 0) {
-                actionConfig.icon = (
-                  <Mail className="w-4 h-4" />
-                );
-                actionConfig.onClick = () =>
-                  window.open(
-                    "mailto:afshar@example.com",
-                    "_blank",
-                  );
-              } else if (index === 1) {
-                actionConfig.icon = (
-                  <Linkedin className="w-4 h-4" />
-                );
-                actionConfig.onClick = () =>
-                  window.open(
-                    "https://linkedin.com/in/afshar",
-                    "_blank",
-                  );
-              }
-            } else if (userInput === t.suggestions[5]) {
-              // Portfolio question
-              if (index === 0) {
-                actionConfig.icon = (
-                  <Github className="w-4 h-4" />
-                );
-                actionConfig.onClick = () =>
-                  window.open(
-                    "https://github.com/afshar",
-                    "_blank",
-                  );
-              } else if (index === 1) {
-                actionConfig.onClick = () =>
-                  window.open("https://afshar.dev", "_blank");
-              }
+          // Map actions to icons/handlers by the question context
+          if (userInput === COPY.suggestions[2]) {
+            // Background -> open resume
+            cfg.icon = <FileText className="w-4 h-4" />;
+            cfg.onClick = () => navigate("/resume");
+          } else if (userInput === COPY.suggestions[3]) {
+            // Contact
+            if (index === 0) {
+              cfg.icon = <Mail className="w-4 h-4" />;
+              cfg.onClick = () =>
+                window.open("mailto:afshar@example.com", "_blank");
+            } else if (index === 1) {
+              cfg.icon = <Linkedin className="w-4 h-4" />;
+              cfg.onClick = () =>
+                window.open("https://linkedin.com/in/afshar", "_blank");
             }
-
-            return actionConfig;
-          },
-        ),
+          } else if (userInput === COPY.suggestions[5]) {
+            // Portfolio
+            if (index === 0) {
+              cfg.icon = <Github className="w-4 h-4" />;
+              cfg.onClick = () =>
+                window.open("https://github.com/afshar", "_blank");
+            } else if (index === 1) {
+              cfg.onClick = () => window.open("https://afshar.dev", "_blank");
+            }
+          }
+          return cfg;
+        }),
       };
     } else {
       response = {
         question: userInput,
-        answer: t.defaultResponse,
+        answer: COPY.defaultResponse,
       };
     }
 
-    setResponses([...responses, response]);
+    setResponses((prev) => [...prev, response]);
     setUserInput("");
   };
 
@@ -267,14 +239,12 @@ export function Terminal({ language }: TerminalProps) {
     <>
       <div
         className="w-full h-full relative z-10 flex items-center justify-center overflow-hidden pb-[50px]"
-        dir={isRTL ? "rtl" : "ltr"}
+        dir="ltr"
       >
         {/* Terminal Content - Centered Block */}
         <div className="w-full max-w-4xl px-8 flex flex-col max-h-full font-mono mb-[50px]">
           {/* Scrollable History Section */}
-          <div
-            className={`overflow-y-auto flex-shrink min-h-0 flex flex-col justify-end pb-8 ${isRTL ? "text-right justify-start" : "text-left items-start"}`}
-          >
+          <div className="overflow-y-auto flex-shrink min-h-0 flex flex-col justify-end pb-8 text-left items-start">
             {/* Greeting Text with Auto-Type */}
             <div className="mb-8">
               <span className="text-green-400 text-4xl md:text-5xl">
@@ -293,52 +263,37 @@ export function Terminal({ language }: TerminalProps) {
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`mb-6 w-full ${isRTL ? "text-right" : "text-left"}`}
+                className="mb-6 w-full text-left"
               >
-                <div
-                  className={`text-green-400 mb-2 flex gap-1 ${isRTL ? "justify-end justify-start" : "justify-start items-baseline"}`}
-                >
+                <div className="text-green-400 mb-2 flex gap-1 justify-start items-baseline">
                   <span className="text-green-500">&gt;_</span>{" "}
                   <span>{response.question}</span>
                 </div>
-                <div
-                  className={`text-green-300/80 mb-4 ${isRTL ? "mr-6" : "ml-6"}`}
-                >
+                <div className="text-green-300/80 mb-4 ml-6">
                   <div className="flex items-center gap-2">
                     <span>{response.answer}</span>
                     {response.isLoading && <LoadingDots />}
                   </div>
-
                 </div>
-                {response.actions &&
-                  response.actions.length > 0 && (
-                    <div
-                      className={`flex flex-wrap gap-2 mt-3 ${isRTL ? "mr-6 justify-end justify-start" : "ml-6 justify-start items-baseline"}`}
-                    >
-                      {response.actions.map(
-                        (action, actionIndex) => (
-                          <Button
-                            key={actionIndex}
-                            onClick={action.onClick}
-                            variant="outline"
-                            size="sm"
-                            className="bg-green-950/30 border-green-500/50 text-green-400 hover:bg-green-900/50 hover:text-green-300 hover:border-green-400"
-                          >
-                            {action.icon && (
-                              <span
-                                className={
-                                  isRTL ? "ml-2" : "mr-2"
-                                }
-                              >
-                                {action.icon}
-                              </span>
-                            )}
-                            {action.label}
-                          </Button>
-                        ),
-                      )}
-                    </div>
-                  )}
+
+                {response.actions && response.actions.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-3 ml-6 justify-start items-baseline">
+                    {response.actions.map((action, actionIndex) => (
+                      <Button
+                        key={actionIndex}
+                        onClick={action.onClick}
+                        variant="outline"
+                        size="sm"
+                        className="bg-green-950/30 border-green-500/50 text-green-400 hover:bg-green-900/50 hover:text-green-300 hover:border-green-400"
+                      >
+                        {action.icon && (
+                          <span className="mr-2">{action.icon}</span>
+                        )}
+                        {action.label}
+                      </Button>
+                    ))}
+                  </div>
+                )}
               </motion.div>
             ))}
           </div>
@@ -349,20 +304,18 @@ export function Terminal({ language }: TerminalProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className={`flex-shrink-0 ${isRTL ? "text-right" : "text-left"}`}
+              className="flex-shrink-0 text-left"
             >
               <form
                 onSubmit={handleSubmit}
-                className={`flex gap-2 ${isRTL ? "justify-end items-baseline" : "justify-start items-center"}`}
+                className="flex gap-2 justify-start items-center"
               >
-                <span className="text-green-500 text-xl">
-                  &gt;_
-                </span>
+                <span className="text-green-500 text-xl">&gt;_</span>
                 <div className="flex-1 relative">
-                  {/* Hidden span to measure text width - will support RTL via dir prop */}
+                  {/* Hidden span to measure text width */}
                   <span
                     ref={measureRef}
-                    className={`text-green-400 text-xl invisible absolute whitespace-pre pointer-events-none ${isRTL ? "text-right" : "text-left"}`}
+                    className="text-green-400 text-xl invisible absolute whitespace-pre pointer-events-none text-left"
                     aria-hidden="true"
                   >
                     {userInput}
@@ -370,17 +323,7 @@ export function Terminal({ language }: TerminalProps) {
                   {/* Flashing cursor positioned at end of text */}
                   <span
                     className="text-green-400 text-xl animate-pulse absolute pointer-events-none"
-                    style={
-                      isRTL
-                        ? {
-                            right: `${cursorPosition}px`,
-                            top: "0",
-                          }
-                        : {
-                            left: `${cursorPosition}px`,
-                            top: "0",
-                          }
-                    }
+                    style={{ left: `${cursorPosition}px`, top: "0" }}
                   >
                     {showCursor ? "█" : " "}
                   </span>
@@ -388,11 +331,9 @@ export function Terminal({ language }: TerminalProps) {
                     ref={inputRef}
                     type="text"
                     value={userInput}
-                    onChange={(e) =>
-                      setUserInput(e.target.value)
-                    }
-                    className={`w-full bg-transparent text-green-400 text-xl outline-none caret-transparent placeholder-green-700 ${isRTL ? "text-right" : "text-left"}`}
-                    placeholder={t.inputPlaceholder}
+                    onChange={(e) => setUserInput(e.target.value)}
+                    className="w-full bg-transparent text-green-400 text-xl outline-none caret-transparent placeholder-green-700 text-left"
+                    placeholder={COPY.inputPlaceholder}
                     autoComplete="off"
                   />
                 </div>
@@ -404,11 +345,9 @@ export function Terminal({ language }: TerminalProps) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1 }}
-                  className={`mt-8 text-green-700 text-sm ${isRTL ? "text-right" : "text-left"}`}
+                  className="mt-8 text-green-700 text-sm text-left"
                 >
-                  {isRTL
-                    ? "💡 نکته: برای دیدن سوالات پیشنهادی اسکرول کنید"
-                    : "💡 Tip: Try scrolling to see suggested questions"}
+                  💡 Tip: Try scrolling to see suggested questions
                 </motion.div>
               )}
             </motion.div>
@@ -420,13 +359,12 @@ export function Terminal({ language }: TerminalProps) {
       <AnimatePresence>
         {showPicker && (
           <PickerWheel
-            suggestions={t.suggestions}
+            suggestions={COPY.suggestions}
             onSelect={handleSelectSuggestion}
             onClose={() => {
               setShowPicker(false);
               hasScrolledRef.current = false;
             }}
-            isRTL={isRTL}
           />
         )}
       </AnimatePresence>

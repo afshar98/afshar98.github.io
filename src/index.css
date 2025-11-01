@@ -1432,15 +1432,6 @@ html {
   font-size: var(--font-size);
 }
 
-[dir="rtl"] {
-  --font-family-mono: "Vazir Code";
-  direction: rtl;
-}
-
-[dir="rtl"] .font-mono, [dir="rtl"] * {
-  font-family: Vazir Code !important;
-}
-
 [dir="ltr"] {
   direction: ltr;
 }
