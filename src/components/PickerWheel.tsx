@@ -26,14 +26,17 @@ export function PickerWheel({
       }
     };
 
-    const handleClick = () => {
+    const handleChoose = () => {
       onSelect(suggestions[selectedIndex]);
-      onClose();
     };
 
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "Enter") handleClick();
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleChoose();
+        onClose();
+      }
       if (e.key === "ArrowDown") {
         e.preventDefault();
         setSelectedIndex((p) => (p + 1) % suggestions.length);
@@ -44,6 +47,13 @@ export function PickerWheel({
           (p) => (p - 1 + suggestions.length) % suggestions.length
         );
       }
+    };
+
+    const handleClick = (e: MouseEvent) => {
+      // clicking anywhere confirms current selection (keeps fast UX)
+      e.preventDefault();
+      handleChoose();
+      onClose();
     };
 
     window.addEventListener("wheel", handleWheel, { passive: false });

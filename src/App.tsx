@@ -1,16 +1,16 @@
+import { useEffect } from "react";
 import {
   BrowserRouter,
-  Routes,
-  Route,
   Navigate,
+  Route,
+  Routes,
   useNavigate,
 } from "react-router-dom";
-import { Terminal } from "./components/Terminal";
 import { Resume } from "./components/Resume";
-import { ImageWithFallback } from "./components/figma/ImageWithFallback";
-import { useEffect } from "react";
-import { Blogs } from "./components/blogs/Blogs";
 import { BlogDetail } from "./components/blogs/BlogDetail";
+import { Blogs } from "./components/blogs/Blogs";
+import { ImageWithFallback } from "./components/figma/ImageWithFallback";
+import { Terminal } from "./components/terminal/Terminal";
 
 function TerminalPage() {
   const navigate = useNavigate();
