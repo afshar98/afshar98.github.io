@@ -1,36 +1,59 @@
-// components/Resume.tsx
 import { motion } from "motion/react";
 import { Button } from "./ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Download, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-/** ---------- Static English copy (replace with your real data) ---------- */
+const RESUME_PDF_URL = "/Mohammad_Afshar_cv2.pdf";
+
 const COPY = {
   backToHome: "Back to Home",
   title: "Resume",
   summary:
-    "Front-End Developer focused on React/Next.js, performance, and building reliable UI systems with great DX.",
+    "Front-End Developer with 6+ years of experience in React, Next.js, and TypeScript. I build scalable, user-centric apps with clean, maintainable code, strong performance, and modern UI/UX practices.",
+  links: {
+    email: "mo.afshar1998@gmail.com",
+    phone: "+98 903 196 8986",
+    linkedin: "https://www.linkedin.com/in/afshar98",
+    github: "https://github.com/afshar98",
+  },
   experience: {
     title: "Experience",
     jobs: [
       {
-        title: "Senior Front-End Developer",
-        company: "Acme Corp",
-        period: "2023 — Present",
+        title: "Front-End Developer (On-site)",
+        company: "Part Artificial Intelligence Research Center",
+        location: "Tehran, Iran",
+        period: "Dec 2023 — Present",
         description: [
-          "Led migration to Next.js/Vite with SWC for faster builds and optimized DX.",
-          "Built a component library with Tailwind, Radix, and shadcn/ui.",
-          "Improved bundle size and CLS/LCP via code-splitting and strict typing.",
+          "Built and launched AI-driven platforms (“Sepehr”, “DanaBot”, “Avanegar”, “Avasho”) with Next.js, React, Tailwind, React Query, TypeScript, and shadcn/ui.",
+          "Improved dev workflow by collaborating across Front-End, Back-End, DevOps, and UI/UX; accelerated feature rollouts.",
+          "Implemented comprehensive automated tests with high coverage to prevent regressions and support CI.",
+          "Designed and maintained Docker configs for reproducible local dev and consistent deployments.",
+          "Delivered a full i18n architecture in Sepehr for a fully localized UX.",
+          "Optimized performance and accessibility with modern standards and maintainable component structures.",
         ],
       },
       {
-        title: "Front-End Developer",
-        company: "Beta Labs",
-        period: "2021 — 2023",
+        title: "Front-End Developer (Remote)",
+        company: "POMECHAIN — B2C/B2B E-Commerce",
+        location: "Dubai, UAE",
+        period: "Mar 2022 — Nov 2023",
         description: [
-          "Implemented real-time dashboards (WebSocket) and data-heavy tables.",
-          "Introduced React Query & Zustand for predictable data/state layers.",
-          "Set up Storybook + Vitest for reliable component delivery.",
+          "Led front-end redesign of the e-commerce platform and admin panel; increased user retention by ~20%.",
+          "Delivered the JomlahBazar marketplace from concept to launch in 8 months, hitting all milestones.",
+          "Integrated advanced search (Algolia, Azure Cognitive Services) for faster, more relevant discovery.",
+          "Hardened client-side security best practices; lowered vulnerability risk by ~35%.",
+        ],
+      },
+      {
+        title: "Front-End Developer (On-site)",
+        company: "Webartma",
+        location: "Ahvaz, Iran",
+        period: "Jun 2019 — May 2020",
+        description: [
+          "Developed and maintained Front-End for Dr. Zeytoon, GoldState Agency, and SenikTV.",
+          "Optimized performance for faster page loads and smoother, more consistent UX across apps.",
+          "Collaborated with Back-End teams to integrate APIs and improve client-server data flow.",
         ],
       },
     ],
@@ -39,66 +62,167 @@ const COPY = {
     title: "Education",
     items: [
       {
-        degree: "B.Sc. in Computer Engineering",
-        school: "Tech University",
-        period: "2016 — 2020",
+        degree: "M.Sc., Computer Software Engineering",
+        school: "Shahid Rajaee University (Tehran, Iran)",
+        period: "Oct 2021 — Sep 2024",
+      },
+      {
+        degree: "B.Sc., Computer Engineering",
+        school: "Shahid Chamran University (Ahvaz, Iran)",
+        period: "Jan 2016 — Jan 2021",
       },
     ],
   },
   skills: {
     title: "Skills",
+    languages: ["Persian (native)", "English (upper intermediate)"],
     categories: [
       {
-        name: "Core",
-        items: ["JavaScript (ESNext)", "TypeScript", "React", "Next.js", "Vite"],
+        name: "Core Front-End",
+        items: [
+          "React",
+          "Next.js",
+          "TypeScript",
+          "Zustand",
+          "React Query",
+          "Tailwind",
+          "shadcn/ui",
+          "WebSocket",
+        ],
       },
       {
-        name: "UI / Styling",
-        items: ["Tailwind CSS", "Radix UI", "shadcn/ui", "Storybook"],
+        name: "Testing & Tools",
+        items: ["Jest", "Storybook", "Git", "Docker", "CI/CD"],
       },
       {
-        name: "Data / Testing / Tooling",
-        items: ["React Query", "Zustand", "Jest/Vitest", "Playwright", "ESLint/Prettier"],
+        name: "Architecture & Patterns",
+        items: ["SOLID", "Performance Optimization", "Component Architecture"],
+      },
+      {
+        name: "Collaboration",
+        items: ["Agile", "Code Review", "Mentoring"],
       },
     ],
   },
 };
-/** ---------------------------------------------------------------------- */
 
 export function Resume() {
   const navigate = useNavigate();
+  const handleBackToHome = () => navigate("/");
 
-  const handleBackToHome = () => {
-    navigate("/");
+  const handleDownload = () => {
+    // trigger browser download
+    const a = document.createElement("a");
+    a.href = RESUME_PDF_URL;
+    a.download = "Mohammad_Afshar_CV.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   };
 
   return (
-    <div className="min-h-screen bg-black text-green-400 font-mono p-8 overflow-y-auto" dir="ltr">
+    <div
+      className="min-h-screen bg-black text-green-400 font-mono p-8 overflow-y-auto"
+      dir="ltr"
+    >
       {/* Header */}
-      <div className="flex items-start mb-8">
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+      <div className="flex items-start justify-between gap-4 mb-8 max-w-4xl mx-auto w-full">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
           <Button
             onClick={handleBackToHome}
             variant="ghost"
             className="text-green-400 hover:text-green-300 hover:bg-green-950/30 gap-2"
+            title="Back to Home"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>{COPY.backToHome}</span>
+            <span>Back to Home</span>
           </Button>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-2"
+        >
+          <Button
+            onClick={handleDownload}
+            className="bg-green-950/30 border border-green-500/50 text-green-300 hover:bg-green-900/50 hover:text-green-200 hover:border-green-400 gap-2"
+            variant="outline"
+            title="Download PDF"
+          >
+            <Download className="w-4 h-4" />
+            <span>Download Resume</span>
+          </Button>
+          <a
+            href={RESUME_PDF_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center rounded-md border border-green-500/40 px-3 py-2 text-sm hover:bg-green-900/30 gap-2"
+            title="View PDF"
+          >
+            <FileText className="w-4 h-4" />
+            View PDF
+          </a>
         </motion.div>
       </div>
 
       <div className="max-w-4xl mx-auto">
         {/* Title + Summary */}
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-12 text-left">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 text-left"
+        >
           <h1 className="text-4xl mb-4 text-green-400">
             <span className="text-green-500">{">"}_</span> {COPY.title}
           </h1>
           <p className="text-green-300/80 text-lg">{COPY.summary}</p>
+
+          <div className="mt-4 text-sm text-green-400/80 space-x-4">
+            <a
+              className="underline hover:text-green-300"
+              href={`mailto:${COPY.links.email}`}
+            >
+              {COPY.links.email}
+            </a>
+            <span>•</span>
+            <a
+              className="underline hover:text-green-300"
+              href={`tel:${COPY.links.phone.replace(/\s+/g, "")}`}
+            >
+              {COPY.links.phone}
+            </a>
+            <span>•</span>
+            <a
+              className="underline hover:text-green-300"
+              href={COPY.links.linkedin}
+              target="_blank"
+              rel="noreferrer"
+            >
+              LinkedIn
+            </a>
+            <span>•</span>
+            <a
+              className="underline hover:text-green-300"
+              href={COPY.links.github}
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+          </div>
         </motion.div>
 
         {/* Experience */}
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-12">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-12"
+        >
           <h2 className="text-2xl mb-6 text-green-400 text-left">
             <span className="text-green-500">#</span> {COPY.experience.title}
           </h2>
@@ -111,9 +235,11 @@ export function Resume() {
                 transition={{ delay: 0.2 + index * 0.1 }}
                 className="border-l-2 pl-6 border-green-500/30"
               >
-                <h3 className="text-xl text-green-400 mb-1 text-left">{job.title}</h3>
+                <h3 className="text-xl text-green-400 mb-1 text-left">
+                  {job.title}
+                </h3>
                 <div className="text-green-500 mb-2 text-left">
-                  {job.company} • {job.period}
+                  {job.company} • {job.location} • {job.period}
                 </div>
                 <ul className="space-y-2 list-none">
                   {job.description.map((item, i) => (
@@ -129,7 +255,12 @@ export function Resume() {
         </motion.section>
 
         {/* Education */}
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-12">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mb-12"
+        >
           <h2 className="text-2xl mb-6 text-green-400 text-left">
             <span className="text-green-500">#</span> {COPY.education.title}
           </h2>
@@ -142,7 +273,9 @@ export function Resume() {
                 transition={{ delay: 0.5 + index * 0.1 }}
                 className="border-l-2 border-green-500/30 pl-6"
               >
-                <h3 className="text-xl text-green-400 mb-1 text-left">{item.degree}</h3>
+                <h3 className="text-xl text-green-400 mb-1 text-left">
+                  {item.degree}
+                </h3>
                 <div className="text-green-500 text-left">
                   {item.school} • {item.period}
                 </div>
@@ -152,23 +285,36 @@ export function Resume() {
         </motion.section>
 
         {/* Skills */}
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="mb-12">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="mb-16"
+        >
           <h2 className="text-2xl mb-6 text-green-400 text-left">
             <span className="text-green-500">#</span> {COPY.skills.title}
           </h2>
-          <div className="grid md:grid-cols-3 gap-6 text-left">
+
+          <div className="mb-4 text-left">
+            <h3 className="text-lg text-green-400 mb-2">Languages</h3>
+            <p className="text-green-300/80">
+              {COPY.skills.languages.join(" • ")}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
             {COPY.skills.categories.map((category, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 + index * 0.1 }}
+                transition={{ delay: 0.7 + index * 0.08 }}
                 className="bg-green-950/20 border border-green-500/30 rounded-lg p-4"
               >
-                <h3 className="text-lg text-green-400 mb-3 text-left">{category.name}</h3>
+                <h3 className="text-lg text-green-400 mb-3">{category.name}</h3>
                 <ul className="space-y-1">
                   {category.items.map((skill, i) => (
-                    <li key={i} className="text-green-300/80 text-left">
+                    <li key={i} className="text-green-300/80">
                       <span className="text-green-500 mr-2">{">"}</span>
                       {skill}
                     </li>
@@ -182,3 +328,5 @@ export function Resume() {
     </div>
   );
 }
+
+export default Resume;
