@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    /* Lang/JSX */
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+
+    /* Target & Modules */
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
+    "allowImportingTsExtensions": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+
+    /* Interop & Types */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["vite/client"],
+
+    /* Strictness */
+    "strict": true,
+    "skipLibCheck": true,
+
+    /* Paths (optional) */
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@/*": ["src/*"]
+    // }
+  },
+  "include": ["src", "src/env.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}

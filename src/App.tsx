@@ -11,6 +11,7 @@ import { BlogDetail } from "./components/blogs/BlogDetail";
 import { Blogs } from "./components/blogs/Blogs";
 import { ImageWithFallback } from "./components/figma/ImageWithFallback";
 import { Terminal } from "./components/terminal/Terminal";
+import Contact from "./components/contact/Contact";
 
 function TerminalPage() {
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ export default function App() {
         <Route path="/resume" element={<ResumePage />} />
         <Route path="/blogs" element={<BlogsPage />} />
         <Route path="/blogs/:slug" element={<BlogDetailPage />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/" element={<TerminalPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

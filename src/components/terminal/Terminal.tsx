@@ -1,18 +1,18 @@
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../ui/button";
-import { PickerWheel } from "../PickerWheel";
 import { LoadingDots } from "../LoadingDots";
+import { PickerWheel } from "../PickerWheel";
+import { Button } from "../ui/button";
 import TerminalInput from "./TerminalInput";
 
 import {
+  buildCandidates,
   COPY,
+  ICONS,
   PAGES,
   Response,
   ResponseAction,
-  buildCandidates,
-  ICONS,
 } from "./constants";
 import { useAutocomplete, useHistory } from "./hooks";
 
@@ -126,6 +126,16 @@ export function Terminal() {
       });
       setIsRedirecting(true);
       setTimeout(() => navigate("/blogs"), 2000);
+      return;
+    }
+    if (lower === "contact") {
+      pushResponse({
+        question: "cd contact",
+        answer: COPY.commands.cdContact,
+        isLoading: true,
+      });
+      setIsRedirecting(true);
+      setTimeout(() => navigate("/contact"), 2000);
       return;
     }
     pushResponse({
@@ -313,7 +323,7 @@ export function Terminal() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="flex-shrink-0 text-left"
+              className="shrink-0 text-left"
             >
               <TerminalInput
                 value={userInput}

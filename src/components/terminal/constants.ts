@@ -1,7 +1,7 @@
 import { Mail, Linkedin, Github, FileText } from "lucide-react";
 import type { ReactNode } from "react";
 
-export const PAGES = ["resume", "blogs"] as const;
+export const PAGES = ["resume", "blogs", "contact"] as const;
 
 export type ResponseAction = {
   label: string;
@@ -20,7 +20,7 @@ export const COPY = {
   greeting: "Hi, I'm Mohammad — Front-End Developer.",
   inputPlaceholder:
     "Type a command (e.g., cd blogs) · Tab: autocomplete · ↑/↓: history",
-  commands: { cdResume: "Opening resume...", cdBlogs: "Opening blogs..." },
+  commands: { cdResume: "Opening resume...", cdBlogs: "Opening blogs...", cdContact: "Opening contact us..." },
   suggestions: [
     "Who are you?",
     "What do you do?",
