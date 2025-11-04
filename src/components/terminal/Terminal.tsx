@@ -263,7 +263,7 @@ export function Terminal() {
       >
         <div className="w-full max-w-4xl px-8 flex flex-col max-h-full font-mono mb-[50px]">
           {/* history */}
-          <div className="overflow-y-auto flex-shrink min-h-0 flex flex-col justify-end pb-8 text-left items-start">
+          <div className="overflow-y-auto shrink min-h-0 flex flex-col justify-end pb-8 text-left items-start">
             {/* greeting */}
             <div className="mb-8">
               <span className="text-green-400 text-4xl md:text-5xl">
