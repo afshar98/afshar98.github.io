@@ -18,6 +18,12 @@ import { useAutocomplete, useHistory } from "./hooks";
 
 const { Mail, Linkedin, Github, FileText } = ICONS;
 
+const USER_LINKS = {
+  email: "mo.afshar1998@gmail.com",
+  linkedin: "https://www.linkedin.com/in/afshar98",
+  github: "https://github.com/afshar98",
+};
+
 export function Terminal() {
   const navigate = useNavigate();
 
@@ -179,37 +185,58 @@ export function Terminal() {
 
     const data = COPY.responses[raw];
     if (data) {
+      // Map button labels → icons + handlers (robust to text changes)
       const actions: ResponseAction[] | undefined = data.actions?.map(
-        (action, index) => {
+        (action) => {
+          const label = action.label.toLowerCase();
           const cfg: ResponseAction = {
             label: action.label,
             onClick: () => {},
           };
-          if (raw === COPY.suggestions[2]) {
+
+          // Navigation buttons
+          if (label.includes("Open Resume")) {
             cfg.icon = <FileText className="w-4 h-4" />;
             cfg.onClick = () => navigate("/resume");
-          } else if (raw === COPY.suggestions[3]) {
-            if (index === 0) {
-              cfg.icon = <Mail className="w-4 h-4" />;
-              cfg.onClick = () =>
-                window.open("mailto:afshar@example.com", "_blank");
-            } else if (index === 1) {
-              cfg.icon = <Linkedin className="w-4 h-4" />;
-              cfg.onClick = () =>
-                window.open("https://linkedin.com/in/afshar", "_blank");
-            }
-          } else if (raw === COPY.suggestions[5]) {
-            if (index === 0) {
-              cfg.icon = <Github className="w-4 h-4" />;
-              cfg.onClick = () =>
-                window.open("https://github.com/afshar", "_blank");
-            } else if (index === 1) {
-              cfg.onClick = () => window.open("https://afshar.dev", "_blank");
-            }
+            return cfg;
           }
+
+          if (label.includes("open blogs") || label.includes("blogs")) {
+            cfg.icon = <FileText className="w-4 h-4" />;
+            cfg.onClick = () => navigate("/blogs");
+            return cfg;
+          }
+
+          if (label.includes("contact")) {
+            cfg.icon = <Mail className="w-4 h-4" />;
+            cfg.onClick = () => navigate("/contact");
+            return cfg;
+          }
+
+          // External links
+          if (label.includes("email")) {
+            cfg.icon = <Mail className="w-4 h-4" />;
+            cfg.onClick = () =>
+              navigate("/contact");
+            return cfg;
+          }
+
+          if (label.includes("linkedin")) {
+            cfg.icon = <Linkedin className="w-4 h-4" />;
+            cfg.onClick = () => window.open(USER_LINKS.linkedin, "_blank");
+            return cfg;
+          }
+
+          if (label.includes("github")) {
+            cfg.icon = <Github className="w-4 h-4" />;
+            cfg.onClick = () => window.open(USER_LINKS.github, "_blank");
+            return cfg;
+          }
+
           return cfg;
         }
       );
+
       pushResponse({ question: raw, answer: data.answer, actions });
     } else {
       pushResponse({ question: raw, answer: COPY.defaultResponse });
@@ -345,7 +372,7 @@ export function Terminal() {
                   transition={{ delay: 1 }}
                   className="mt-8 text-green-700 text-sm text-left"
                 >
-                  💡 Tip: Try <code>ls</code>, <code>cd blogs</code>, press{" "}
+                  💡 Tip: Try <code>ls</code>, <code>cd resume</code>, press{" "}
                   <kbd>Tab</kbd> to autocomplete, or use <kbd>↑</kbd>/
                   <kbd>↓</kbd> for history.
                 </motion.div>

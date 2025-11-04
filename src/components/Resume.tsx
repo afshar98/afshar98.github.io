@@ -3,13 +3,13 @@ import { Button } from "./ui/button";
 import { ArrowLeft, Download, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const RESUME_PDF_URL = "/Mohammad_Afshar_cv2.pdf";
+const RESUME_PDF_URL = "/files/Mohammad_Afshar_CV.pdf";
 
 const COPY = {
   backToHome: "Back to Home",
   title: "Resume",
   summary:
-    "Front-End Developer with 6+ years of experience in React, Next.js, and TypeScript. I build scalable, user-centric apps with clean, maintainable code, strong performance, and modern UI/UX practices.",
+    " Front-End Developer with over 6 years of experience specializing in React, Next.js, and TypeScript. Adept at building highly scalable, user-centric web applications while maintaining clean and maintainable code. Skilled in optimizing performance, improving user engagement, and collaborating with cross-functional teams. Passionate about UI/UX principles and implementing best practices in modern web development. Committed to continuous learning, problem-solving, and delivering high-quality digital experiences.",
   links: {
     email: "mo.afshar1998@gmail.com",
     phone: "+98 903 196 8986",
@@ -75,7 +75,7 @@ const COPY = {
   },
   skills: {
     title: "Skills",
-    languages: ["Persian (native)", "English (upper intermediate)"],
+    languages: ["Persian (native)", "English (upper intermediate), German (beginner)"],
     categories: [
       {
         name: "Core Front-End",
