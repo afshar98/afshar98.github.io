@@ -75,7 +75,11 @@ const COPY = {
   },
   skills: {
     title: "Skills",
-    languages: ["Persian (native)", "English (upper intermediate), German (beginner)"],
+    languages: [
+      "Persian (native)",
+      "English (upper intermediate)",
+      "German (A1 – beginner)",
+    ],
     categories: [
       {
         name: "Core Front-End",
@@ -110,14 +114,35 @@ export function Resume() {
   const navigate = useNavigate();
   const handleBackToHome = () => navigate("/");
 
-  const handleDownload = () => {
-    // trigger browser download
-    const a = document.createElement("a");
-    a.href = RESUME_PDF_URL;
-    a.download = "Mohammad_Afshar_CV.pdf";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+  const handleDownload = async () => {
+    try {
+      const res = await fetch(RESUME_PDF_URL, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Mohammad_Afshar_CV.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      // cleanup
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    } catch (err) {
+      // Fallback: normal anchor with download attribute
+      const a = document.createElement("a");
+      a.href = RESUME_PDF_URL;
+      a.download = "Mohammad_Afshar_CV.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+  };
+
+  const handleView = () => {
+    window.open(RESUME_PDF_URL, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -138,7 +163,7 @@ export function Resume() {
             title="Back to Home"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Home</span>
+            <span>{COPY.backToHome}</span>
           </Button>
         </motion.div>
 
@@ -156,16 +181,15 @@ export function Resume() {
             <Download className="w-4 h-4" />
             <span>Download Resume</span>
           </Button>
-          <a
-            href={RESUME_PDF_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center rounded-md border border-green-500/40 px-3 py-2 text-sm hover:bg-green-900/30 gap-2"
+          <Button
+            onClick={handleView}
+            className="bg-green-950/30 border border-green-500/40 text-green-300 hover:bg-green-900/50 hover:text-green-200 hover:border-green-400 gap-2"
+            variant="outline"
             title="View PDF"
           >
             <FileText className="w-4 h-4" />
-            View PDF
-          </a>
+            <span>View PDF</span>
+          </Button>
         </motion.div>
       </div>
 
@@ -302,7 +326,7 @@ export function Resume() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
             {COPY.skills.categories.map((category, index) => (
               <motion.div
                 key={index}

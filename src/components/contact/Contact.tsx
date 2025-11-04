@@ -129,8 +129,7 @@ export function Contact() {
               <span className="text-green-500">{">"}_</span> Contact
             </h1>
             <p className="text-green-400/70 text-sm">
-              Send me a message —{" "}
-              {canUseEmailJS ? "EmailJS enabled" : "mailto fallback"}.
+              Send me a message
             </p>
           </header>
 
@@ -181,7 +180,7 @@ export function Contact() {
                 <Button
                   type="submit"
                   disabled={!isValid}
-                  className="bg-green-950/30 border border-green-500/50 text-green-300 hover:bg-green-900/50 hover:text-green-200 hover:border-green-400"
+                  className="bg-green-950/30 border px-10 py-5 cursor-pointer border-green-500/50 text-green-300 hover:bg-green-900/50 hover:text-green-200 hover:border-green-400"
                   variant="outline"
                 >
                   Send
@@ -213,12 +212,7 @@ export function Contact() {
           {step === "done" && (
             <div className="py-10 text-center">
               <p className="text-green-400 text-lg">
-                Message sent (or readied) ✅
-              </p>
-              <p className="text-green-400/70 mt-2">
-                {canUseEmailJS
-                  ? "Sent successfully via EmailJS."
-                  : "Your email client should have opened with the message prefilled."}
+                Message sent successfully ^-^
               </p>
               <div className="mt-6 flex justify-center">
                 <Button
@@ -230,7 +224,7 @@ export function Contact() {
                     setStep("form");
                     titleRef.current?.focus();
                   }}
-                  className="bg-green-950/30 border border-green-500/50 text-green-300 hover:bg-green-900/50 hover:text-green-200 hover:border-green-400"
+                  className="bg-green-950/30 border cursor-pointer border-green-500/50 text-green-300 hover:bg-green-900/50 hover:text-green-200 hover:border-green-400"
                   variant="outline"
                 >
                   Send another
