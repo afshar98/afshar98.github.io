@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { BLOGS } from "./data";
-import { Button } from "../ui/button";
+import { Button } from "../../components/ui/button";
 import { ArrowLeft, CalendarDays, Tag } from "lucide-react";
 
 export function Blogs() {

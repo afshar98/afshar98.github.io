@@ -6,12 +6,12 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
-import { Resume } from "./components/Resume";
-import { BlogDetail } from "./components/blogs/BlogDetail";
-import { Blogs } from "./components/blogs/Blogs";
-import { ImageWithFallback } from "./components/figma/ImageWithFallback";
+import { Resume } from "./pages/resume/Resume";
+import { BlogDetail } from "./pages/blogs/BlogDetail";
+import { Blogs } from "./pages/blogs/Blogs";
+import { ImageWithFallback } from "./components/ui/ImageWithFallback";
 import { Terminal } from "./components/terminal/Terminal";
-import Contact from "./components/contact/Contact";
+import Contact from "./pages/contact/Contact";
 
 function TerminalPage() {
   const navigate = useNavigate();

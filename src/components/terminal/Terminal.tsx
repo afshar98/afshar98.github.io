@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LoadingDots } from "../LoadingDots";
-import { PickerWheel } from "../PickerWheel";
+import { LoadingDots } from "../loader-dots/LoadingDots";
+import { PickerWheel } from "../picker-wheel/PickerWheel";
 import { Button } from "../ui/button";
 import TerminalInput from "./TerminalInput";
 

@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { LoadingDots } from "../LoadingDots";
-import { Button } from "../ui/button";
+import { LoadingDots } from "../../components/loader-dots/LoadingDots";
+import { Button } from "../../components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
