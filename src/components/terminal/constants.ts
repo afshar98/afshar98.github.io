@@ -17,7 +17,7 @@ export type Response = {
 };
 
 export const COPY = {
-  greeting: "Hey there — I’m Mohammad Afshar, a Front-End Developer.",
+  greeting: "Mohammad Afshar > Front-End Dev",
   inputPlaceholder:
     "Type a command (e.g., cd resume) · Tab: autocomplete · ↑/↓: history",
   commands: {

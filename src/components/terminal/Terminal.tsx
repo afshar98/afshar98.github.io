@@ -288,16 +288,16 @@ export function Terminal() {
         className="w-full h-full relative z-10 flex items-center justify-center overflow-hidden pb-[50px]"
         dir="ltr"
       >
-        <div className="w-full max-w-4xl px-8 flex flex-col max-h-full font-mono mb-[50px]">
+        <div className="w-full max-w-4xl flex flex-col max-h-full font-mono mb-[50px]">
           {/* history */}
           <div className="overflow-y-auto shrink min-h-0 flex flex-col justify-end pb-8 text-left items-start">
             {/* greeting */}
             <div className="mb-8">
-              <span className="text-green-400 text-4xl md:text-5xl">
+              <span className="text-green-400 text-4xl md:text-5xl font-bold">
                 {displayedText}
               </span>
               {!isTypingComplete && (
-                <span className="text-green-400 text-4xl md:text-5xl">
+                <span className="text-green-400 text-4xl md:text-5xl font-bold">
                   {showCursor ? "█" : " "}
                 </span>
               )}
