@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 export default defineConfig({
-  base: '/afshar98.github.io/',
+  base: '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
@@ -27,6 +27,9 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
     },
   },
-  build: { target: 'esnext', outDir: 'build' },
+  build: {
+    target: 'esnext',
+    outDir: 'docs',
+  },
   server: { port: 3000, open: true },
 })
