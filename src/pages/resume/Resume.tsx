@@ -3,7 +3,7 @@ import { Button } from "../../components/ui/button";
 import { ArrowLeft, Download, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const RESUME_PDF_URL = "/files/Mohammad_Afshar_CV.pdf";
+const RESUME_PDF_URL = "/files/Mohammad_Afshar_cv.pdf";
 
 const COPY = {
   backToHome: "Back to Home",
@@ -123,7 +123,7 @@ export function Resume() {
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = "Mohammad_Afshar_CV.pdf";
+      a.download = "Mohammad_Afshar_cv.pdf";
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -134,7 +134,7 @@ export function Resume() {
       // Fallback: normal anchor with download attribute
       const a = document.createElement("a");
       a.href = RESUME_PDF_URL;
-      a.download = "Mohammad_Afshar_CV.pdf";
+      a.download = "Mohammad_Afshar_cv.pdf";
       document.body.appendChild(a);
       a.click();
       a.remove();
