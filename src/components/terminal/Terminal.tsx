@@ -330,15 +330,23 @@ export function Terminal() {
     }
 
     if (e.key === "Tab") {
+      e.preventDefault();
       if (completion) {
-        e.preventDefault();
-        setUserInput((v) => v + completion);
+        const start = input.selectionStart ?? input.value.length;
+        const end = input.selectionEnd ?? start;
+        const nextValue =
+          input.value.slice(0, start) + completion + input.value.slice(end);
+        setLine(nextValue, start + completion.length);
       }
       return;
     }
     if (e.key === "ArrowRight" && completion) {
       e.preventDefault();
-      setUserInput((v) => v + completion);
+      const start = input.selectionStart ?? input.value.length;
+      const end = input.selectionEnd ?? start;
+      const nextValue =
+        input.value.slice(0, start) + completion + input.value.slice(end);
+      setLine(nextValue, start + completion.length);
       return;
     }
     if (e.key === "ArrowUp") {
