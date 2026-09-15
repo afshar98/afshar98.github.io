@@ -253,6 +253,82 @@ export function Terminal() {
 
   // input hotkeys
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    const setLine = (next: string, caret = next.length) => {
+      setUserInput(next);
+      requestAnimationFrame(() => input.setSelectionRange(caret, caret));
+    };
+
+    if (e.ctrlKey && !e.altKey) {
+      const key = e.key.toLowerCase();
+
+      if (key === "a") {
+        e.preventDefault();
+        input.setSelectionRange(0, 0);
+        return;
+      }
+      if (key === "e") {
+        e.preventDefault();
+        input.setSelectionRange(input.value.length, input.value.length);
+        return;
+      }
+      if (key === "k") {
+        e.preventDefault();
+        setLine(input.value.slice(0, input.selectionStart ?? input.value.length));
+        return;
+      }
+      if (key === "u") {
+        e.preventDefault();
+        const caret = input.selectionStart ?? 0;
+        setLine(input.value.slice(caret), 0);
+        return;
+      }
+      if (key === "w") {
+        e.preventDefault();
+        const caret = input.selectionStart ?? 0;
+        const beforeCaret = input.value.slice(0, caret).replace(/\s+$/, "");
+        const wordStart = beforeCaret.search(/\S+$/);
+        if (wordStart < 0) {
+          setLine(input.value.slice(caret), 0);
+          return;
+        }
+        setLine(
+          input.value.slice(0, wordStart) + input.value.slice(caret),
+          wordStart
+        );
+        return;
+      }
+      if (key === "c") {
+        e.preventDefault();
+        setLine("");
+        return;
+      }
+      if (key === "l") {
+        e.preventDefault();
+        handleClear();
+        return;
+      }
+    }
+
+    if (e.altKey && !e.ctrlKey) {
+      const caret = input.selectionStart ?? 0;
+      if (e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        const beforeCaret = input.value.slice(0, caret).replace(/\s+$/, "");
+        const wordStart = beforeCaret.search(/\S+$/);
+        input.setSelectionRange(wordStart < 0 ? 0 : wordStart, wordStart < 0 ? 0 : wordStart);
+        return;
+      }
+      if (e.key.toLowerCase() === "f") {
+        e.preventDefault();
+        const afterCaret = input.value.slice(caret);
+        const wordEnd = afterCaret.search(/\s+/);
+        const nextCaret = wordEnd < 0 ? input.value.length : caret + wordEnd;
+        input.setSelectionRange(nextCaret, nextCaret);
+        return;
+      }
+    }
+
     if (e.key === "Tab") {
       if (completion) {
         e.preventDefault();
@@ -267,17 +343,12 @@ export function Terminal() {
     }
     if (e.key === "ArrowUp") {
       e.preventDefault();
-      historyUp(setUserInput);
+      historyUp(setUserInput, userInput);
       return;
     }
     if (e.key === "ArrowDown") {
       e.preventDefault();
       historyDown(setUserInput);
-      return;
-    }
-    if (e.ctrlKey && e.key.toLowerCase() === "l") {
-      e.preventDefault();
-      handleClear();
       return;
     }
   };

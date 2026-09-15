@@ -25,13 +25,36 @@ export default function TerminalInput({
   const measureRef = useRef<HTMLSpanElement>(null);
   const [cursorPx, setCursorPx] = useState(0);
 
+  const updateCaretPosition = () => {
+    const input = inputRef.current;
+    if (!input) return;
+
+    const caretPosition = input.selectionStart ?? value.length;
+    setCaretPosition(caretPosition);
+  };
+
+  const [caretPosition, setCaretPosition] = useState(value.length);
+
+  const moveCaretToEnd = () => {
+    const input = inputRef.current;
+    if (!input) return;
+
+    input.setSelectionRange(value.length, value.length);
+    setCaretPosition(value.length);
+  };
+
   useEffect(() => {
-    if (autoFocus) inputRef.current?.focus();
+    if (autoFocus) {
+      inputRef.current?.focus();
+      moveCaretToEnd();
+    }
   }, [autoFocus]);
 
   useEffect(() => {
-    if (measureRef.current) setCursorPx(measureRef.current.offsetWidth);
-  }, [value]);
+    if (measureRef.current) {
+      setCursorPx(measureRef.current.offsetWidth);
+    }
+  }, [caretPosition, value]);
 
   return (
     <form onSubmit={onSubmit} className="flex gap-2 justify-start items-center">
@@ -42,7 +65,7 @@ export default function TerminalInput({
           className="text-green-400 text-xl invisible absolute whitespace-pre pointer-events-none text-left"
           aria-hidden="true"
         >
-          {value}
+          {value.slice(0, caretPosition)}
         </span>
 
         {completion && (
@@ -67,6 +90,10 @@ export default function TerminalInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={onKeyDown}
+          onFocus={moveCaretToEnd}
+          onClick={updateCaretPosition}
+          onKeyUp={updateCaretPosition}
+          onSelect={updateCaretPosition}
           className="w-full bg-transparent text-green-400 text-xl outline-none caret-transparent placeholder-green-700 text-left"
           placeholder={placeholder}
           autoComplete="off"

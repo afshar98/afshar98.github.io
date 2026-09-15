@@ -14,15 +14,17 @@ export function useAutocomplete(candidates: string[], userInput: string) {
 export function useHistory() {
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1); // -1 = live input
+  const [savedInput, setSavedInput] = useState("");
 
   const push = (cmd: string) => {
     setHistory((h) => (h[h.length - 1] === cmd ? h : [...h, cmd]));
     setHistoryIndex(-1);
   };
 
-  const up = (setInput: (v: string) => void) => {
+  const up = (setInput: (v: string) => void, currentInput: string) => {
     setHistoryIndex((idx) => {
       if (!history.length) return -1;
+      if (idx === -1) setSavedInput(currentInput);
       const next = idx === -1 ? history.length - 1 : Math.max(0, idx - 1);
       setInput(history[next] ?? "");
       return next;
@@ -32,9 +34,10 @@ export function useHistory() {
   const down = (setInput: (v: string) => void) => {
     setHistoryIndex((idx) => {
       if (!history.length) return -1;
-      const next = idx === -1 ? -1 : idx + 1;
+      if (idx === -1) return -1;
+      const next = idx + 1;
       if (next >= history.length) {
-        setInput("");
+        setInput(savedInput);
         return -1;
       }
       setInput(history[next] ?? "");
