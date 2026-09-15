@@ -43,6 +43,13 @@ export default function TerminalInput({
     setCaretPosition(value.length);
   };
 
+  const restoreFocus = () => {
+    requestAnimationFrame(() => {
+      inputRef.current?.focus();
+      updateCaretPosition();
+    });
+  };
+
   useEffect(() => {
     if (autoFocus) {
       inputRef.current?.focus();
@@ -90,7 +97,8 @@ export default function TerminalInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={onKeyDown}
-          onFocus={moveCaretToEnd}
+          onFocus={updateCaretPosition}
+          onBlur={restoreFocus}
           onClick={updateCaretPosition}
           onKeyUp={updateCaretPosition}
           onSelect={updateCaretPosition}
